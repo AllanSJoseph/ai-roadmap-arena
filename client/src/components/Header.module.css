@@ -115,3 +115,62 @@
     transform: rotate(10deg) scale(1.08);
   }
 }
+
+.healthIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  cursor: help;
+  transition: var(--transition-smooth);
+}
+
+.healthIndicator:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.indicatorDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  transition: var(--transition-smooth);
+}
+
+.dotYellow {
+  background-color: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
+  animation: pulseDot 1.5s infinite ease-in-out;
+}
+
+.dotGreen {
+  background-color: var(--success);
+  box-shadow: 0 0 8px var(--success);
+}
+
+.dotRed {
+  background-color: var(--error);
+  box-shadow: 0 0 8px var(--error);
+  animation: pulseDot 1s infinite ease-in-out;
+}
+
+.indicatorText {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
