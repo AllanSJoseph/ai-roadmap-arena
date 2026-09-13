@@ -1,0 +1,13 @@
+node_modules
+*.md
+*.env
+*.log
+
+dist
+.vscode
+.idea
+.git
+.agent
+.claude
+
+
