@@ -2,7 +2,7 @@
 
 echo "Initialising Database"
 
-npm run init:db
+npm run db:init
 
 echo "Starting Server"
 

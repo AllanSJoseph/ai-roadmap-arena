@@ -8,10 +8,10 @@ RUN npm ci
 
 COPY . .
 
+RUN chmod +x /app/entrypoint.sh
+
 USER node
 
 EXPOSE 5000
-
-RUN chmod +x /app/entrypoint.sh
 
 CMD ["/app/entrypoint.sh"]

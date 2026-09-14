@@ -1,17 +1,19 @@
-version: '3.9'
+version: "3.9"
 
 services:
   database:
-    image: pgvector/pgvector:0.6.0
+    image: postgres:17-alpine
     container_name: database
     ports:
       - "5432:5432"
-    env_file:
-      - ./backend/.env
+    environment:
+      POSTGRES_USER: roadmap
+      POSTGRES_PASSWORD: aiRmap123
+      POSTGRES_DB: ai_roadmap
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dev -d ai_roadmap"]
+      test: ["CMD-SHELL", "pg_isready -U roadmap -d ai_roadmap"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,9 +28,13 @@ services:
     ports:
       - "5000:5000"
     env_file:
-     - ./backend/.env
+     - ./server/.env
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - app-network
 
   client:
     build:
@@ -37,6 +43,10 @@ services:
     container_name: client
     ports:
       - "80:80"
+    env_file:
+      - ./client/.env
+    depends_on:
+      - server
     networks:
       - app-network
 

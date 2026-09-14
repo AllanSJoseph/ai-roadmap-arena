@@ -1,4 +1,154 @@
-# Deployment Guide - AI Roadmap Generator
+# Deployment Guide
+
+# Table of Contents
+
+1. [Before Setup Instructions](#before-setup)
+2. [Run Locally](#run-locally)
+3. [Run via Docker](#run-via-docker-)
+4. [Cloud Deployment](#cloud-deployment-vercel-render-and-neon-postgresql-free-tier)
+
+
+# Before Setup
+
+## Set Up Gemini API key
+
+- Go to [Google AI studio](https://aistudio.google.com)
+- Login using your google account
+- Expand sidebar and go to ```api keys -> create api key```
+- Copy the api key and paste to the server environment
+
+## Get JWT secret key
+
+For creating jwt secret key run this using node js and paste it's output to the variable
+
+```javascript
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+# Run Locally
+
+Follow these instructions to run the file locally on your PC.
+
+## Basic Requirements
+- Node.js installed
+- Google gemini api from google ai studio
+- PostgreSQL installed locally or mounted via Docker
+
+## 1. Setup PostgreSQL
+Create a new database in your postgresql server.
+
+```sql
+CREATE DATABASE ai_roadmap;
+```
+
+## 2. Install Dependencies
+
+After cloning the repository, go to the repository folder and install dependencies.
+
+```bash
+cd client
+npm install
+
+cd ..
+
+cd server
+npm install
+
+```
+
+## 3. Setup Environment
+
+Go to client and create a .env file and paste this. you can also copy the env.example file and save as .env on same directory.
+
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
+```
+
+If your backend port or link is different change the url accordingly
+
+Client Environment setup done.
+
+Now go to server folder and create an .env file with the following details.
+
+```env
+PORT=5000
+DATABASE_URL=postgresql://postgres_username:postgres_password@localhost:portno/ai_roadmap
+JWT_SECRET=your_jwt_secret_key
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-1.5-flash
+```
+Give the postgresql username password hostname and port correctly
+
+Also provide the Google Gemini API key and jwt secret key generated.
+
+## 4. Run Migrations
+
+Go to server directory and open a terminal run 
+
+```bash
+npm run db:init
+```
+
+## 5. Run the application
+
+Create a new terminal and go to repository directory.
+
+Go to server directory and run the server
+```bash
+cd server
+```
+
+```bash
+npm start
+```
+
+Or to run on dev mode
+
+```bash
+npm run dev
+```
+
+Do the same for client with the same commands after changing to client directory
+```bash
+cd client
+```
+
+# Run via Docker 🐳
+
+## Basic Requirements
+- Docker & Docker Compose installed
+
+## 1. Set Up Environment
+
+In this setup just copy the .env.example file for both server and client and save as .env .
+
+Add the jwt secret and your gemini api key to the new .env file
+
+## 2. Run the Application
+
+Run the application using docker compose
+
+```bash
+docker compose up -d --build
+```
+
+Check if all the components of the application such as the client, server and database are running
+
+```bash
+docker ps
+```
+
+And the output should look something like below
+```
+CONTAINER ID   IMAGE                     COMMAND                  CREATED         STATUS                   PORTS                                         NAMES
+d175f1b69cd3   ai-roadmap-arena-client   "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes             0.0.0.0:80->80/tcp, [::]:80->80/tcp           client
+0e4e8a04e86b   ai-roadmap-arena-server   "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes             0.0.0.0:5000->5000/tcp, [::]:5000->5000/tcp   server
+714dde5e5b47   postgres:17-alpine        "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes (healthy)   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp   database
+```
+
+If all three services are running open ```http://localhost:80``` in your favoruite web browser.
+
+# Cloud Deployment (Vercel, Render and Neon PostgreSQL Free Tier)
 
 Follow these instructions to deploy your database to Neon, backend to Render, and frontend to Vercel.
 
